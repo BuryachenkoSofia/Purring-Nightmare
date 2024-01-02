@@ -1,2 +1,2 @@
-# Super-Mega-Nano-Ultra-Shooter-MMORPG
-Super Mega Nano Ultra Shooter MMORPG
+# Purring-Nightmare
+Itch.io: https://buryachenko.itch.io/purring-nightmare
