@@ -5,16 +5,16 @@ using Random = System.Random;
 public class PlayerControl : MonoBehaviour
 {
   private Rigidbody2D _rb;
-  public GameObject Dver, deadPanel;
-  public float speed = 6f, HP = 100f, h;
-  private bool fasing = true, dverOpen = false;
-  public AudioSource eatAudio, teleportAudio, deadAudio, runAudio;
-  public GameObject player1, player2;
-
+  public GameObject door, deadPanel;
+  private float speed = 6f, HP = 100f, h;
+  private bool fasing = true, doorOpen = false, isMove = false;
+  public AudioSource eatAudio, deadAudio;
+  private Animator animator;
 
   private void Awake()
   {
     _rb = GetComponent<Rigidbody2D>();
+    animator = GetComponent<Animator>();
     HP = 100f;
     PlayerPrefs.SetFloat("HP", HP);
     deadPanel.gameObject.SetActive(false);
@@ -22,14 +22,22 @@ public class PlayerControl : MonoBehaviour
   }
   private void Update()
   {
-    if (dverOpen)
+    animator.SetBool("IsMove", isMove);
+    if (doorOpen)
     {
-      Dver.gameObject.SetActive(false);
+      door.gameObject.SetActive(false);
     }
-    if (!dverOpen)
+    if (!doorOpen)
     {
-      Dver.gameObject.SetActive(true);
+      door.gameObject.SetActive(true);
     }
+    if (Input.GetKeyDown(KeyCode.E) && HP > 10)
+    {
+      HP = HP - 10;
+      speed += 2;
+      PlayerPrefs.SetFloat("HP", HP);
+    }
+
   }
   private void FixedUpdate()
   {
@@ -38,56 +46,59 @@ public class PlayerControl : MonoBehaviour
     transform.position += (Vector3)moveAmount;
 
     float h = Input.GetAxis("Horizontal") * speed * Time.fixedDeltaTime;
+    if (h < 0 && fasing) { Flip(); }
+    else if (h > 0 && !fasing) { Flip(); }
 
-    if (Input.GetKeyDown(KeyCode.E) && HP > 10)
+    if (Mathf.Abs(Input.GetAxis("Horizontal")) + Mathf.Abs(Input.GetAxis("Vertical")) > 0.1f)
     {
-      HP = HP - 10;
-      speed += 2;
-      PlayerPrefs.SetFloat("HP", HP);
+      isMove = true;
+    }
+    else
+    {
+      isMove = false;
     }
 
-    if (h < 0 && fasing) { Flip(); } // поворт в нужное направление 
-    else if (h > 0 && !fasing) { Flip(); } // поворт в нужное направление 
   }
 
-  private void Flip() // поворот в противополошную сторону 
+  private void Flip()
   {
-    fasing = !fasing; // изменяем переменную (из true в false, из false в true)
+    fasing = !fasing;
     Vector3 theScale = transform.localScale;
     theScale.x *= -1;
     transform.localScale = theScale;
   }
   private void OnCollisionEnter2D(Collision2D other)
   {
-    if (other.gameObject.tag == "kitekat")
+    if (other.gameObject.tag == "GreenFood")
     {
       Destroy(other.gameObject);
-      player1.gameObject.SetActive(false);
-      player2.gameObject.SetActive(true);
       enemyAttaсk(15, 20);
     }
-    if (other.gameObject.tag == "whiskas")
+    if (other.gameObject.tag == "RedFood")
     {
       Destroy(other.gameObject);
-      player1.gameObject.SetActive(false);
-      player2.gameObject.SetActive(true);
       enemyAttaсk(15, 25);
     }
-    if (other.gameObject.tag == "purinaOne")
+    if (other.gameObject.tag == "BlueFood")
     {
       Destroy(other.gameObject);
-      player1.gameObject.SetActive(false);
-      player2.gameObject.SetActive(true);
       enemyAttaсk(15, 25);
     }
     if (other.gameObject.tag == "key")
     {
-      dverOpen = true;
+      doorOpen = true;
+      Destroy(other.gameObject);
+    }
+    if (other.gameObject.tag == "heart")
+    {
+      HP = PlayerPrefs.GetFloat("HP");
+      if (HP < 90) HP = HP + 10;
+      else HP = 100;
+      PlayerPrefs.SetFloat("HP", HP);
       Destroy(other.gameObject);
     }
     if (other.gameObject.name == "Teleport")
     {
-      teleportAudio.Play();
       if (PlayerPrefs.GetInt("difficultyLevel") + 1 == 4)
       {
         SceneManager.LoadScene(0);
@@ -103,7 +114,6 @@ public class PlayerControl : MonoBehaviour
   public void enemyAttaсk(int a, int b)
   {
     eatAudio.Play();
-
     Random rnd = new Random();
     HP = PlayerPrefs.GetFloat("HP");
     HP = HP - rnd.Next(a, b + 1);

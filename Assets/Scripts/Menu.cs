@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 
 public class Menu : MonoBehaviour
 {
-  public GameObject toggler; // объект toggle
+  public GameObject toggler;
 
   private void Update()
   {
