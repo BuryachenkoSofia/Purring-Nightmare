@@ -5,7 +5,6 @@ using UnityEngine.SceneManagement;
 public class Menu : MonoBehaviour
 {
   public GameObject toggler;
-
   private void Update()
   {
     if (Input.GetKey(KeyCode.Escape) && Input.GetKey(KeyCode.LeftControl))
@@ -25,43 +24,39 @@ public class Menu : MonoBehaviour
     PlayerPrefs.SetInt("difficultyLevel", 1);
     SceneManager.LoadScene(0);
   }
+
   public void StartGame()
   {
     PlayerPrefs.SetInt("difficultyLevel", PlayerPrefs.GetInt("DefaultDifficultyLevel"));
     SceneManager.LoadScene(1);
   }
-  public void Level1()
+
+  public void Level(int level)
   {
-    PlayerPrefs.SetInt("difficultyLevel", 1);
+    PlayerPrefs.SetInt("difficultyLevel", level);
     SceneManager.LoadScene(1);
   }
-  public void Level2()
+
+  public void NextLevel()
   {
-    PlayerPrefs.SetInt("difficultyLevel", 2);
-    SceneManager.LoadScene(1);
+    if (PlayerPrefs.GetInt("difficultyLevel") == 3)
+    {
+      SceneManager.LoadScene(0);
+    }
+    else
+    {
+      PlayerPrefs.SetInt("difficultyLevel", PlayerPrefs.GetInt("difficultyLevel") + 1);
+      SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
   }
-  public void Level3()
-  {
-    PlayerPrefs.SetInt("difficultyLevel", 3);
-    SceneManager.LoadScene(1);
-  }
+
   public void RestartLevel()
   {
     SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
   }
+
   public void ExitGame()
   {
     Application.Quit();
-  }
-  public void userToggle()
-  {
-    if (toggler.GetComponent<Toggle>().isOn)
-    {
-      PlayerPrefs.SetInt("isPC", 1);
-    }
-    else if (!toggler.GetComponent<Toggle>().isOn)
-    {
-      PlayerPrefs.SetInt("isPC", 0);
-    }
   }
 }

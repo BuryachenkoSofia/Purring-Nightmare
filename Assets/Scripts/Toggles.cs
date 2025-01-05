@@ -4,21 +4,23 @@ using UnityEngine;
 public class Toggles : MonoBehaviour
 {
   public int defaultDifficultyLevel;
-  public Toggle toggler1, toggler2, toggler3;
+  public Toggle[] toggler = new Toggle[3];
+  void Start()
+  {
+    if (!PlayerPrefs.HasKey("DefaultDifficultyLevel"))
+    {
+      PlayerPrefs.SetInt("DefaultDifficultyLevel", 1);
+    }
+  }
   void Update()
   {
     defaultDifficultyLevel = PlayerPrefs.GetInt("DefaultDifficultyLevel");
-    switch (defaultDifficultyLevel)
+    for (int i = 0; i < 3; i++)
     {
-      case 1:
-        toggler1.isOn = true;
-        break;
-      case 2:
-        toggler2.isOn = true;
-        break;
-      case 3:
-        toggler3.isOn = true;
-        break;
+      if (defaultDifficultyLevel == i + 1)
+      {
+        toggler[i].isOn = true;
+      }
     }
   }
 }

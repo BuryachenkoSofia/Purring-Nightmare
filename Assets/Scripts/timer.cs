@@ -1,7 +1,6 @@
 using UnityEngine.UI;
 using UnityEngine;
 
-
 public class timer : MonoBehaviour
 {
   public GameObject deadPanel;
@@ -14,7 +13,7 @@ public class timer : MonoBehaviour
   void Start()
   {
     difficultyLevel = PlayerPrefs.GetInt("difficultyLevel");
-    startTime = 60f*(6f-difficultyLevel); // 300 240 180
+    startTime = 60f*(6f-difficultyLevel);
     timeLeft = startTime;
   }
 

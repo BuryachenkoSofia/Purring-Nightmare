@@ -23,21 +23,14 @@ public class PlayerControl : MonoBehaviour
   private void Update()
   {
     animator.SetBool("IsMove", isMove);
-    if (doorOpen)
-    {
-      door.gameObject.SetActive(false);
-    }
-    if (!doorOpen)
-    {
-      door.gameObject.SetActive(true);
-    }
+    door.gameObject.SetActive(!doorOpen);
     if (Input.GetKeyDown(KeyCode.E) && HP > 10)
     {
-      HP = HP - 10;
+      HP -= 10;
       speed += 2;
       PlayerPrefs.SetFloat("HP", HP);
+      Debug.Log("HP: " + HP);
     }
-
   }
   private void FixedUpdate()
   {
@@ -46,18 +39,10 @@ public class PlayerControl : MonoBehaviour
     transform.position += (Vector3)moveAmount;
 
     float h = Input.GetAxis("Horizontal") * speed * Time.fixedDeltaTime;
-    if (h < 0 && fasing) { Flip(); }
-    else if (h > 0 && !fasing) { Flip(); }
 
-    if (Mathf.Abs(Input.GetAxis("Horizontal")) + Mathf.Abs(Input.GetAxis("Vertical")) > 0.1f)
-    {
-      isMove = true;
-    }
-    else
-    {
-      isMove = false;
-    }
+    if ((h < 0 && fasing) || (h > 0 && !fasing)) Flip();
 
+    isMove = (Mathf.Abs(Input.GetAxis("Horizontal")) + Mathf.Abs(Input.GetAxis("Vertical")) > 0.1f);
   }
 
   private void Flip()
@@ -69,37 +54,23 @@ public class PlayerControl : MonoBehaviour
   }
   private void OnCollisionEnter2D(Collision2D other)
   {
-    if (other.gameObject.tag == "GreenFood")
-    {
-      Destroy(other.gameObject);
-      enemyAttaсk(15, 20);
-    }
-    if (other.gameObject.tag == "RedFood")
-    {
-      Destroy(other.gameObject);
-      enemyAttaсk(15, 25);
-    }
-    if (other.gameObject.tag == "BlueFood")
-    {
-      Destroy(other.gameObject);
-      enemyAttaсk(15, 25);
-    }
-    if (other.gameObject.tag == "key")
-    {
-      doorOpen = true;
-      Destroy(other.gameObject);
-    }
+    if (other.gameObject.tag == "GreenFood") enemyAttaсk(15, 20);
+    if (other.gameObject.tag == "RedFood" || other.gameObject.tag == "BlueFood") enemyAttaсk(15, 25);
+    if (other.gameObject.tag == "key") doorOpen = true;
+    
     if (other.gameObject.tag == "heart")
     {
       HP = PlayerPrefs.GetFloat("HP");
       if (HP < 90) HP = HP + 10;
       else HP = 100;
       PlayerPrefs.SetFloat("HP", HP);
-      Destroy(other.gameObject);
     }
+
+    if (other.gameObject.tag == "GreenFood" || other.gameObject.tag == "RedFood" || other.gameObject.tag == "BlueFood" || other.gameObject.tag == "key" || other.gameObject.tag == "heart") Destroy(other.gameObject);
+    
     if (other.gameObject.name == "Teleport")
     {
-      if (PlayerPrefs.GetInt("difficultyLevel") + 1 == 4)
+      if (PlayerPrefs.GetInt("difficultyLevel") == 3)
       {
         SceneManager.LoadScene(0);
       }
@@ -108,7 +79,6 @@ public class PlayerControl : MonoBehaviour
         PlayerPrefs.SetInt("difficultyLevel", PlayerPrefs.GetInt("difficultyLevel") + 1);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
       }
-
     }
   }
   public void enemyAttaсk(int a, int b)
