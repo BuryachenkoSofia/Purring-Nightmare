@@ -10,11 +10,14 @@
 /[Ll]ogs/
 /[Uu]ser[Ss]ettings/
 
-# MemoryCaptures can get excessive in size.
-# They also could contain extremely sensitive data
+
+/[Ll]ogos/
+/[Ll]ogo/
+/[Aa]ssets/[Ll]ogo/
+/[Aa]ssets/[Ll]ogos/
+
 /[Mm]emoryCaptures/
 
-# Recordings can get excessive in size
 /[Rr]ecordings/
 
 # Uncomment this line if you wish to ignore the asset store tools plugin
