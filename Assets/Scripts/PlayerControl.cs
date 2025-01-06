@@ -1,11 +1,13 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Random = System.Random;
+using UnityEngine.UI;
 
 public class PlayerControl : MonoBehaviour
 {
   private Rigidbody2D _rb;
-  public GameObject door, deadPanel;
+  public GameObject door, deadPanel, winPanel;
+  public Image keyImage;
   private float speed = 6f, HP = 100f, h;
   private bool fasing = true, doorOpen = false, isMove = false;
   public AudioSource eatAudio, deadAudio;
@@ -18,18 +20,22 @@ public class PlayerControl : MonoBehaviour
     HP = 100f;
     PlayerPrefs.SetFloat("HP", HP);
     deadPanel.gameObject.SetActive(false);
+    winPanel.gameObject.SetActive(false);
     Time.timeScale = 1f;
   }
   private void Update()
   {
     animator.SetBool("IsMove", isMove);
     door.gameObject.SetActive(!doorOpen);
+
+    if (doorOpen) keyImage.color = new Color(1, 1, 1, 1);
+    else keyImage.color = new Color(1, 1, 1, 0.2f);
+
     if (Input.GetKeyDown(KeyCode.E) && HP > 10)
     {
       HP -= 10;
       speed += 2;
       PlayerPrefs.SetFloat("HP", HP);
-      Debug.Log("HP: " + HP);
     }
   }
   private void FixedUpdate()
@@ -57,7 +63,7 @@ public class PlayerControl : MonoBehaviour
     if (other.gameObject.tag == "GreenFood") enemyAttaсk(15, 20);
     if (other.gameObject.tag == "RedFood" || other.gameObject.tag == "BlueFood") enemyAttaсk(15, 25);
     if (other.gameObject.tag == "key") doorOpen = true;
-    
+
     if (other.gameObject.tag == "heart")
     {
       HP = PlayerPrefs.GetFloat("HP");
@@ -67,18 +73,11 @@ public class PlayerControl : MonoBehaviour
     }
 
     if (other.gameObject.tag == "GreenFood" || other.gameObject.tag == "RedFood" || other.gameObject.tag == "BlueFood" || other.gameObject.tag == "key" || other.gameObject.tag == "heart") Destroy(other.gameObject);
-    
+
     if (other.gameObject.name == "Teleport")
     {
-      if (PlayerPrefs.GetInt("difficultyLevel") == 3)
-      {
-        SceneManager.LoadScene(0);
-      }
-      else
-      {
-        PlayerPrefs.SetInt("difficultyLevel", PlayerPrefs.GetInt("difficultyLevel") + 1);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-      }
+      winPanel.gameObject.SetActive(true);
+      Time.timeScale = 0f;
     }
   }
   public void enemyAttaсk(int a, int b)
@@ -93,6 +92,7 @@ public class PlayerControl : MonoBehaviour
     {
       deadAudio.Play();
       deadPanel.gameObject.SetActive(true);
+      Destroy(this.gameObject);
       Time.timeScale = 0f;
     }
   }

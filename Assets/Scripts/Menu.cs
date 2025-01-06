@@ -5,11 +5,14 @@ using UnityEngine.SceneManagement;
 public class Menu : MonoBehaviour
 {
   public GameObject toggler;
+  public GameObject pausePanel, pauseButton;
+  public Sprite pauseSprite, playSprite;
+
   private void Update()
   {
-    if (Input.GetKey(KeyCode.Escape) && Input.GetKey(KeyCode.LeftControl))
+    if (Input.GetKeyDown(KeyCode.Escape))
     {
-      Application.Quit();
+      Pause();
     }
   }
 
@@ -17,6 +20,22 @@ public class Menu : MonoBehaviour
   {
     PlayerPrefs.SetInt("difficultyLevel", difficultyLevel);
     PlayerPrefs.SetInt("DefaultDifficultyLevel", difficultyLevel);
+  }
+
+  public void Pause()
+  {
+    if (Time.timeScale == 1f)
+    {
+      Time.timeScale = 0f;
+      pausePanel.SetActive(true);
+      pauseButton.GetComponent<Image>().sprite = playSprite;
+    }
+    else
+    {
+      Time.timeScale = 1f;
+      pausePanel.SetActive(false);
+      pauseButton.GetComponent<Image>().sprite = pauseSprite;
+    }
   }
 
   public void ToMenu()
