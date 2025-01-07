@@ -16,12 +16,6 @@ public class Menu : MonoBehaviour
     }
   }
 
-  public void setDifficultyLevel(int difficultyLevel)
-  {
-    PlayerPrefs.SetInt("difficultyLevel", difficultyLevel);
-    PlayerPrefs.SetInt("DefaultDifficultyLevel", difficultyLevel);
-  }
-
   public void Pause()
   {
     if (Time.timeScale == 1f)
@@ -40,7 +34,6 @@ public class Menu : MonoBehaviour
 
   public void ToMenu()
   {
-    PlayerPrefs.SetInt("difficultyLevel", 1);
     SceneManager.LoadScene(0);
   }
 

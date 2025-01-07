@@ -6,17 +6,19 @@ using UnityEngine.UI;
 public class PlayerControl : MonoBehaviour
 {
   private Rigidbody2D _rb;
-  public GameObject door, deadPanel, winPanel;
-  public Image keyImage;
   private float speed = 6f, HP = 100f, h;
   private bool fasing = true, doorOpen = false, isMove = false;
-  public AudioSource eatAudio, deadAudio;
   private Animator animator;
+  private AudiosControl audiosControl;
+  public GameObject door, deadPanel, winPanel;
+  public Image keyImage;
+
 
   private void Awake()
   {
     _rb = GetComponent<Rigidbody2D>();
     animator = GetComponent<Animator>();
+    audiosControl = FindObjectOfType<AudiosControl>();
     HP = 100f;
     PlayerPrefs.SetFloat("HP", HP);
     deadPanel.gameObject.SetActive(false);
@@ -33,6 +35,7 @@ public class PlayerControl : MonoBehaviour
 
     if (Input.GetKeyDown(KeyCode.E) && HP > 10)
     {
+      audiosControl.AudioPlay("e");
       HP -= 10;
       speed += 2;
       PlayerPrefs.SetFloat("HP", HP);
@@ -62,10 +65,15 @@ public class PlayerControl : MonoBehaviour
   {
     if (other.gameObject.tag == "GreenFood") enemyAttaсk(15, 20);
     if (other.gameObject.tag == "RedFood" || other.gameObject.tag == "BlueFood") enemyAttaсk(15, 25);
-    if (other.gameObject.tag == "key") doorOpen = true;
+    if (other.gameObject.tag == "key")
+    {
+      audiosControl.AudioPlay("key");
+      doorOpen = true;
+    }
 
     if (other.gameObject.tag == "heart")
     {
+      audiosControl.AudioPlay("heart");
       HP = PlayerPrefs.GetFloat("HP");
       if (HP < 90) HP = HP + 10;
       else HP = 100;
@@ -78,11 +86,12 @@ public class PlayerControl : MonoBehaviour
     {
       winPanel.gameObject.SetActive(true);
       Time.timeScale = 0f;
+      Destroy(this.gameObject);
     }
   }
   public void enemyAttaсk(int a, int b)
   {
-    eatAudio.Play();
+    audiosControl.AudioPlay("scream");
     Random rnd = new Random();
     HP = PlayerPrefs.GetFloat("HP");
     HP = HP - rnd.Next(a, b + 1);
@@ -90,7 +99,7 @@ public class PlayerControl : MonoBehaviour
 
     if (HP <= 0)
     {
-      deadAudio.Play();
+      audiosControl.AudioPlay("scream");
       deadPanel.gameObject.SetActive(true);
       Destroy(this.gameObject);
       Time.timeScale = 0f;
