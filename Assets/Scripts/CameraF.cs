@@ -15,7 +15,6 @@ public class CameraF : MonoBehaviour
   private void Start()
   {
     player = GameObject.FindGameObjectWithTag("Player").transform;
-
     Camera = GetComponent<Camera>(); 
     initialCameraSize = Camera.orthographicSize;
     needAspect = DefaultResolution.x / DefaultResolution.y;
@@ -25,7 +24,6 @@ public class CameraF : MonoBehaviour
     playerVector = player.position;
     playerVector.z = -10;
     transform.position = Vector3.Lerp(transform.position, playerVector, speed * Time.deltaTime);
-
     float constWidthSize = initialCameraSize * (needAspect / Camera.aspect);
     Camera.orthographicSize = Mathf.Lerp(constWidthSize, initialCameraSize, WidthOrHeight);
   }

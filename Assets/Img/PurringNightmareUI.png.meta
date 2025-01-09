@@ -886,6 +886,27 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: FindTheKey
+      rect:
+        serializedVersion: 2
+        x: 354
+        y: 280
+        width: 144
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 23cf40b5430af5c4fa9255d5bafde26e
+      internalID: 1141839966
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -902,6 +923,7 @@ TextureImporter:
       Easy: 385411435
       Pause: 1569393991
       Sound: 705606268
+      FindTheKey: 1141839966
       Arrow: -161870994
       Continue: 1962268302
       Grain: -1080654227

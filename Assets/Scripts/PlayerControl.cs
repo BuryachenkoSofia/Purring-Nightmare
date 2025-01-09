@@ -7,7 +7,8 @@ public class PlayerControl : MonoBehaviour
 {
   private Rigidbody2D _rb;
   private float speed = 6f, HP = 100f, h;
-  private bool fasing = true, doorOpen = false, isMove = false;
+  private bool fasing = true, isMove = false;
+  public bool doorOpen = false;
   private Animator animator;
   private AudiosControl audiosControl;
   public GameObject door, deadPanel, winPanel;
